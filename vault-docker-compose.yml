@@ -16,6 +16,7 @@ services:
     cap_add:
       - IPC_LOCK
     command: vault server -config=/vault/config/vault-config.json
+    restart: unless-stopped
     networks:
       - vault-consul
 
@@ -28,6 +29,7 @@ services:
     volumes:
       - ./consul/config:/consul/config
     command: consul agent -server -bootstrap-expect=1 -ui -bind=0.0.0.0 -client=0.0.0.0 -config-dir=/consul/config
+    restart: unless-stopped
     networks:
       - vault-consul
 

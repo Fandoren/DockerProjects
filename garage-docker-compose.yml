@@ -1,0 +1,52 @@
+version: "3.9"
+
+networks:
+  localweb:
+    external: true
+
+services:
+  garage:
+    image: dxflrs/garage:090dbb412aff0afcbd42183ec12fa62c15bde58b
+    container_name: garage
+    restart: unless-stopped
+    networks:
+      - localweb
+    volumes:
+      - ./garage/meta:/var/lib/garage/meta
+      - ./garage/data:/var/lib/garage/data
+      - ./garage/garage.toml:/etc/garage.toml:ro
+    command: ["/garage", "-c", "/etc/garage.toml", "server"]
+    ports:
+      - "3900:3900"  # S3 API
+      - "3901:3901"  # RPC
+      - "3902:3902"  # Web
+      - "3903:3903"  # Admin API (ВАЖНО!)
+      - "3904:3904"  # K2V API
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=localweb"
+      # S3 API through Traefik
+      - "traefik.http.routers.garage-s3.rule=Host(`s3.localhost`)"
+      - "traefik.http.routers.garage-s3.entrypoints=web"
+      - "traefik.http.services.garage-s3.loadbalancer.server.port=3900"
+
+  garage-webui:
+    image: khairul169/garage-webui:latest
+    container_name: garage-webui
+    restart: unless-stopped
+    networks:
+      - localweb
+    volumes:
+      - ./garage/garage.toml:/etc/garage.toml:ro
+    environment:
+      API_BASE_URL: "http://garage:3903"
+      API_ADMIN_KEY: "tbZbMlahBDJ3qpypZ0vH7dDCCRC8jmAIf7fF7eirlHLAXuVBITzSwza33hwaX3lQ"
+      S3_ENDPOINT_URL: "http://garage:3900"
+      S3_REGION: "garage"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=localweb"
+      # WebUI through Traefik
+      - "traefik.http.routers.garage-webui.rule=Host(`garageweb.localhost`)"
+      - "traefik.http.routers.garage-webui.entrypoints=web"
+      - "traefik.http.services.garage-webui.loadbalancer.server.port=3909"

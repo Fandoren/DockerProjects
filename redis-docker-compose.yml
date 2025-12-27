@@ -3,14 +3,14 @@ services:
   redis:
     image: redis:latest
     container_name: redis
-    restart: always
+    restart: unless-stopped
     volumes:
       - redis_volume_data:/data
     ports:
       - "6379:6379"
   redis-insight:
     image: redis/redisinsight:latest
-    restart: always
+    restart: unless-stopped
     ports:
       - "5540:5540"
     volumes:

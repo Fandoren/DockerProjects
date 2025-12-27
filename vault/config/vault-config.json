@@ -1,0 +1,17 @@
+{
+  "listener": [{
+    "tcp": {
+      "address": "0.0.0.0:8200",
+      "tls_disable": true
+    }
+  }],
+  "storage": {
+    "consul": {
+      "address": "consul:8500",
+      "path": "vault/",
+      "disable_registration": false
+    }
+  },
+  "ui": true,
+  "api_addr": "http://vault:8200"
+}
