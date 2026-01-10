@@ -4,13 +4,11 @@ services:
   traefik:
     image: traefik:v3.0
     command:
-      - "--entrypoints.web.address=:8080"
-      - "--providers.file.directory=/etc/traefik/dynamic"
-      - "--providers.file.watch=true"
-      - "--api.dashboard=true"
+      - "--configFile=/etc/traefik/traefik.yml"
     ports:
       - "8080:8080"
     volumes:
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
       - ./traefik/dynamic:/etc/traefik/dynamic:ro
     restart: unless-stopped
     networks:
