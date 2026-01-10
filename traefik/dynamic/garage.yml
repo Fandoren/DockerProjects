@@ -1,0 +1,22 @@
+http:
+  routers:
+    garage-s3:
+      rule: Host(`s3.localhost`)
+      entryPoints: [web]
+      service: garage-s3
+
+    garage-webui:
+      rule: Host(`garageweb.localhost`)
+      entryPoints: [web]
+      service: garage-webui
+
+  services:
+    garage-s3:
+      loadBalancer:
+        servers:
+          - url: "http://garage:3900"
+
+    garage-webui:
+      loadBalancer:
+        servers:
+          - url: "http://garage-webui:3909"
