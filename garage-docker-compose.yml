@@ -1,9 +1,5 @@
 version: "3.9"
 
-networks:
-  localweb:
-    external: true
-
 services:
   garage:
     image: dxflrs/garage:090dbb412aff0afcbd42183ec12fa62c15bde58b
@@ -36,3 +32,7 @@ services:
       API_ADMIN_KEY: "tbZbMlahBDJ3qpypZ0vH7dDCCRC8jmAIf7fF7eirlHLAXuVBITzSwza33hwaX3lQ"
       S3_ENDPOINT_URL: "http://garage:3900"
       S3_REGION: "garage"
+
+networks:
+  localweb:
+    external: true

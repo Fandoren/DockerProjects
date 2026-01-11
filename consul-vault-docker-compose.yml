@@ -1,8 +1,6 @@
-version: '3'
-
 services:
   vault:
-    image: hashicorp/vault:1.13.3
+    image: hashicorp/vault:1.21
     ports:
       - "8200:8200"
     volumes:
@@ -18,10 +16,10 @@ services:
     command: vault server -config=/vault/config/vault-config.json
     restart: unless-stopped
     networks:
-      - vault-consul
+      - localweb
 
   consul:
-    image: hashicorp/consul:1.15.4
+    image: hashicorp/consul:1.21
     ports:
       - "8500:8500"
       - "8600:8600/tcp"
@@ -31,8 +29,8 @@ services:
     command: consul agent -server -bootstrap-expect=1 -ui -bind=0.0.0.0 -client=0.0.0.0 -config-dir=/consul/config
     restart: unless-stopped
     networks:
-      - vault-consul
+      - localweb
 
 networks:
-  vault-consul:
-    driver: bridge
+  localweb:
+    external: true

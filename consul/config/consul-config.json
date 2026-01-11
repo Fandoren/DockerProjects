@@ -5,6 +5,6 @@
   "server": true,
   "ui": true,
   "ports": {
-    "dns": 53
+    "dns": 8600
   }
 }
