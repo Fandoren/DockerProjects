@@ -6,5 +6,7 @@
   "ui": true,
   "ports": {
     "dns": 8600
-  }
+  },
+  "server_rejoin_age_max": "87600h",
+  "rejoin_after_leave": true
 }
