@@ -16,12 +16,17 @@ services:
       KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_LOG_DIRS: /tmp/kraft-logs
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       CLUSTER_ID: "MmJlOTJmYzQtZmE5ZS00ZmY5LWJhNjItZjA5ZjQ2MjEwNjJk"
     healthcheck:
       test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "localhost:9092"]
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - kafka-data:/tmp/kraft-logs
     networks:
       - localweb
 
@@ -29,7 +34,7 @@ services:
     image: provectuslabs/kafka-ui:latest
     container_name: kafka-ui
     ports:
-      - "8080:8080"
+      - "10090:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
@@ -40,6 +45,9 @@ services:
       kafka:
         condition: service_healthy
     
+volumes:
+  kafka-data:
+
 networks:
   localweb:
     external: true
